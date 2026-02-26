@@ -1,0 +1,71 @@
+[plugins] feishu_doc: Registered feishu_doc, feishu_app_scopes
+[plugins] feishu_wiki: Registered feishu_wiki tool
+[plugins] feishu_drive: Registered feishu_drive tool
+[plugins] feishu_bitable: Registered bitable tools
+OpenClaw status
+
+Overview
+┌─────────────────┬───────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Item            │ Value                                                                                             │
+├─────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Dashboard       │ http://127.0.0.1:18789/                                                                           │
+│ OS              │ linux 6.17.0-14-generic (x64) · node 22.22.0                                                      │
+│ Tailscale       │ off                                                                                               │
+│ Channel         │ stable (default)                                                                                  │
+│ Update          │ available · pnpm · npm update 2026.2.25                                                           │
+│ Gateway         │ local · ws://127.0.0.1:18789 (local loopback) · reachable 19ms · auth token · openclaw (192.168.  │
+│                 │ 1.111) app 2026.2.21-2 linux 6.17.0-14-generic                                                    │
+│ Gateway service │ systemd installed · enabled · running (pid 82910, state active)                                   │
+│ Node service    │ systemd not installed                                                                             │
+│ Agents          │ 4 · no bootstrap files · sessions 6 · default main active 5m ago                                  │
+│ Memory          │ 0 files · 0 chunks · sources memory · plugin memory-core · vector unknown · fts ready · cache on  │
+│                 │ (0)                                                                                               │
+│ Probes          │ skipped (use --deep)                                                                              │
+│ Events          │ none                                                                                              │
+│ Heartbeat       │ 30m (main), disabled (developer), disabled (researcher), disabled (writer)                        │
+│ Sessions        │ 6 active · default moonshotai/kimi-k2.5 (262k ctx) · 4 stores                                     │
+└─────────────────┴───────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Security audit
+Summary: 1 critical · 2 warn · 1 info
+  CRITICAL Small models require sandboxing and web tools disabled
+    Small models (<=300B params) detected: - openrouter/qwen/qwen3-4b:free (4B) @ agents.defaults.model.fallbacks (unsafe; sandbox=off; web=[web_search, web_fetch,…
+    Fix: If you must use small models, enable sandboxing for all sessions (agents.defaults.sandbox.mode="all") and disable web_search/web_fetch/browser (tools.deny=["group:web","browser"]).
+  WARN Reverse proxy headers are not trusted
+    gateway.bind is loopback and gateway.trustedProxies is empty. If you expose the Control UI through a reverse proxy, configure trusted proxies so local-client c…
+    Fix: Set gateway.trustedProxies to your proxy IPs or keep the Control UI local-only.
+  WARN Some gateway.nodes.denyCommands entries are ineffective
+    gateway.nodes.denyCommands uses exact command-name matching only. - Unknown command names (not in defaults/allowCommands): camera.snap, camera.clip, screen.rec…
+    Fix: Use exact command names (for example: canvas.present, canvas.hide, canvas.navigate, canvas.eval, canvas.snapshot, canvas.a2ui.push, canvas.a2ui.pushJSONL, canvas.a2ui.reset). If you need broader restrictions, remove risky commands from allowCommands/default workflows.
+Full report: openclaw security audit
+Deep probe: openclaw security audit --deep
+
+Channels
+┌──────────┬─────────┬────────┬───────────────────────────────────────────────────────────────────────────────────────┐
+│ Channel  │ Enabled │ State  │ Detail                                                                                │
+├──────────┼─────────┼────────┼───────────────────────────────────────────────────────────────────────────────────────┤
+│ Telegram │ ON      │ OK     │ token config (7899…HUHU · len 46) · accounts 1/1                                      │
+│ Feishu   │ ON      │ OK     │ configured                                                                            │
+└──────────┴─────────┴────────┴───────────────────────────────────────────────────────────────────────────────────────┘
+
+Sessions
+┌──────────────────────────────────────────┬────────┬─────────┬──────────────────────┬────────────────────────────────┐
+│ Key                                      │ Kind   │ Age     │ Model                │ Tokens                         │
+├──────────────────────────────────────────┼────────┼─────────┼──────────────────────┼────────────────────────────────┤
+│ agent:main:main                          │ direct │ 5m ago  │ moonshotai/kimi-k2.5 │ 130k/262k (50%) · 🗄️ 3% cached │
+│ agent:main:subagent:38964c5d-a2…         │ direct │ 21h ago │ moonshotai/kimi-k2.5 │ unknown/262k (?%)              │
+│ agent:main:subagent:4feb280c-25…         │ direct │ 27h ago │ qwen3-4b:free        │ unknown/262k (?%)              │
+│ agent:main:subagent:49a80c90-3a…         │ direct │ 27h ago │ moonshotai/kimi-k2.5 │ unknown/262k (?%)              │
+│ agent:main:subagent:a83175d2-e6…         │ direct │ 27h ago │ moonshotai/kimi-k2.5 │ unknown/262k (?%)              │
+│ agent:main:subagent:a201c0f0-af…         │ direct │ 28h ago │ moonshotai/kimi-k2.5 │ unknown/262k (?%)              │
+└──────────────────────────────────────────┴────────┴─────────┴──────────────────────┴────────────────────────────────┘
+
+FAQ: https://docs.openclaw.ai/faq
+Troubleshooting: https://docs.openclaw.ai/troubleshooting
+
+Update available (npm 2026.2.25). Run: openclaw update
+
+Next steps:
+  Need to share?      openclaw status --all
+  Need to debug live? openclaw logs --follow
+  Need to test channels? openclaw status --deep
